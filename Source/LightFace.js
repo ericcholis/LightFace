@@ -137,8 +137,7 @@ var LightFace = new Class({
 		this.overlay = new Element('div',{
 			html: '&nbsp;',
 			styles: {
-				opacity: 0,
-				visibility: 'hidden'
+				opacity: 0
 			},
 			'class': 'lightfaceOverlay',
 			tween: {
