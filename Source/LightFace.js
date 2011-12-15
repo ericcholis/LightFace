@@ -70,9 +70,12 @@ var LightFace = new Class({
 			},
 			tween: {
 				duration: this.options.fadeDuration,
+				onStart: function() {
+					this.box.setStyle('visibility','visible');
+				}.bind(this),
 				onComplete: function() {
 					if(this.box.getStyle('opacity') == 0) {
-						this.box.setStyles({ top: -9000, left: -9000 });
+						this.box.setStyles({ top: -9000, left: -9000, visibility: 'hidden' });
 					}
 				}.bind(this)
 			}
@@ -134,14 +137,20 @@ var LightFace = new Class({
 		this.overlay = new Element('div',{
 			html: '&nbsp;',
 			styles: {
-				opacity: 0
+				opacity: 0,
+				visibility: 'hidden'
 			},
 			'class': 'lightfaceOverlay',
 			tween: {
 				link: 'chain',
 				duration: this.options.fadeDuration,
 				onComplete: function() {
-					if(this.overlay.getStyle('opacity') == 0) this.box.focus();
+					if(this.overlay.getStyle('opacity') == 0) {
+						this.box.focus();
+						this.overlay.setStyle('visibility','hidden');
+					} else{
+						this.overlay.setStyle('visibility','visible');
+					}
 				}.bind(this)
 			}
 		}).inject(this.contentBox);
@@ -242,7 +251,7 @@ var LightFace = new Class({
 	},
 	unfade: function(delay) {
 		(function() {
-			this.overlay.fade(0);
+			this.overlay.set('tween',{onComplete: (function(){ this.setStyle('visibility','hidden'); }).bind(this.overlay)}).fade(0);
 		}.bind(this)).delay(delay || this.options.fadeDelay);
 		this.fireEvent('unfade');
 		return this;
